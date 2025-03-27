@@ -61,7 +61,8 @@ export const useAnimateOnScroll = () => {
     document.querySelectorAll(".animate-on-scroll").forEach((el) => {
       observer.observe(el);
       el.classList.remove("fade-in");
-      el.style.opacity = "0";
+      // Fix: Cast the element to HTMLElement before accessing style property
+      (el as HTMLElement).style.opacity = "0";
     });
 
     return () => observer.disconnect();
