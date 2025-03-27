@@ -7,17 +7,16 @@ import Button from "../shared/Button";
 interface AuthFormProps {
   type: "login" | "register";
   onSubmit: (data: any) => void;
+  isLoading?: boolean;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, isLoading = false }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     name: "",
     role: "student", // Default role
   });
-  
-  const [isLoading, setIsLoading] = useState(false);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -26,15 +25,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      await onSubmit(formData);
-    } catch (error) {
-      console.error("Authentication error:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    onSubmit(formData);
   };
   
   return (

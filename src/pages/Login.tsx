@@ -5,31 +5,19 @@ import { toast } from "sonner";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AuthForm from "@/components/auth/AuthForm";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, isLoading, error } = useAuth();
   
   const handleLogin = async (data: any) => {
     try {
-      // Simulate API call
-      console.log("Login data:", data);
-      
-      // For demo purposes, simulate success
-      setTimeout(() => {
-        localStorage.setItem("user", JSON.stringify({
-          id: "user-1",
-          email: data.email,
-          role: data.email.includes("admin") ? "admin" : 
-                data.email.includes("teacher") ? "teacher" : "student"
-        }));
-        
-        toast.success("Successfully logged in");
-        navigate("/dashboard");
-      }, 1500);
-      
+      await login(data.email, data.password);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Failed to login. Please check your credentials.");
+      // Error is already handled in the auth context
     }
   };
   
@@ -56,13 +44,35 @@ const Login = () => {
                   />
                   <FeatureItem 
                     title="Personalized Experience" 
-                    description="Enjoy recommendations tailored to your learning style and interests." 
+                    description="Enjoy AI-powered recommendations tailored to your learning style and interests." 
                   />
                 </div>
               </div>
             </div>
             <div className="w-full max-w-md mx-auto">
-              <AuthForm type="login" onSubmit={handleLogin} />
+              <AuthForm type="login" onSubmit={handleLogin} isLoading={isLoading} />
+              
+              {/* Demo accounts info */}
+              <div className="mt-8 p-4 border border-primary/20 rounded-lg bg-primary/5">
+                <h3 className="font-medium text-center mb-2">Demo Accounts</h3>
+                <div className="grid grid-cols-1 gap-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Admin:</span>
+                    <span className="font-mono">admin@teachly.com</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Teacher:</span>
+                    <span className="font-mono">teacher@teachly.com</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Student:</span>
+                    <span className="font-mono">student@teachly.com</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2 text-center">
+                    No password required for demo accounts
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
